@@ -1,0 +1,9 @@
+{
+  "name": "frontend",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Painel web para CRUD de benefícios",
+  "scripts": {
+    "start": "python3 -m http.server 4200"
+  }
+}
