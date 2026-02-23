@@ -1,4 +1,4 @@
-✅ Solução do bug EJB: transferência agora valida IDs/valor/saldo, aplica optimistic locking (`LockModeType.OPTIMISTIC_FORCE_INCREMENT`) e força rollback via `EJBException` em qualquer inconsistência.
+✅ Solução do bug EJB: transferência valida IDs/valor/saldo, aplica optimistic locking (`LockModeType.OPTIMISTIC_FORCE_INCREMENT`) e força rollback via `EJBException` em qualquer inconsistência.
 # 🧩 BIP Teste — Solução Fullstack (Backend + Frontend)
 
 Este projeto entrega uma aplicação completa para **gestão de benefícios**, com:
