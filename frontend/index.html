@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gestão de Benefícios</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="bg-gradient"></div>
+    <main class="container">
+      <header class="hero card">
+        <div>
+          <p class="tag">Painel administrativo</p>
+          <h1>Gestão de Benefícios</h1>
+          <p class="subtitle">CRUD completo + transferência de saldo integrado ao backend na porta 9090.</p>
+        </div>
+        <button id="refreshBtn" class="btn btn-secondary">Atualizar lista</button>
+      </header>
+
+      <section class="grid">
+        <article class="card">
+          <h2 id="formTitle">Novo benefício</h2>
+          <form id="beneficioForm" class="form">
+            <input type="hidden" id="beneficioId" />
+            <label>Nome<input id="nome" required maxlength="100" placeholder="Ex.: Vale Alimentação" /></label>
+            <label>Descrição<textarea id="descricao" maxlength="255" placeholder="Descreva o benefício"></textarea></label>
+            <div class="inline">
+              <label>Valor (R$)<input id="valor" type="number" step="0.01" min="0" required /></label>
+              <label class="toggle">Ativo<input id="ativo" type="checkbox" checked /></label>
+            </div>
+            <div class="actions">
+              <button type="submit" class="btn btn-primary">Salvar</button>
+              <button type="button" id="cancelEditBtn" class="btn btn-ghost" hidden>Cancelar edição</button>
+            </div>
+          </form>
+        </article>
+
+        <article class="card">
+          <h2>Transferência</h2>
+          <form id="transferForm" class="form">
+            <label>Origem<select id="fromId" required></select></label>
+            <label>Destino<select id="toId" required></select></label>
+            <label>Valor<input id="amount" type="number" min="0.01" step="0.01" required /></label>
+            <button type="submit" class="btn btn-primary">Transferir</button>
+          </form>
+        </article>
+      </section>
+
+      <section class="card">
+        <div class="table-header">
+          <h2>Benefícios cadastrados</h2>
+          <span id="counter" class="badge">0 itens</span>
+        </div>
+        <div id="message" class="message" hidden></div>
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Nome</th>
+                <th>Descrição</th>
+                <th>Valor</th>
+                <th>Status</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody id="beneficiosTable"></tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+
+    <script src="./app.js" type="module"></script>
+  </body>
+</html>
