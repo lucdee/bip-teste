@@ -1,8 +1,12 @@
-package com.example.backend.service;
+package com.example.backend.service.impl;
 
+import com.example.backend.exception.BeneficioNotFoundException;
+import com.example.backend.exception.InactiveBeneficioException;
+import com.example.backend.exception.InvalidTransferException;
+import com.example.backend.exception.InsufficientBalanceException;
 import com.example.backend.model.Beneficio;
+import com.example.backend.service.BeneficioTransferService;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.LockModeType;
 import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
@@ -11,11 +15,12 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 
 @Service
-public class BeneficioEjbService {
+public class BeneficioTransferEjbServiceImpl implements BeneficioTransferService {
 
     @PersistenceContext
     private EntityManager em;
 
+    @Override
     @Transactional
     public void transfer(Long fromId, Long toId, BigDecimal amount) {
         validateTransferRequest(fromId, toId, amount);
@@ -23,16 +28,19 @@ public class BeneficioEjbService {
         Beneficio from = em.find(Beneficio.class, fromId, LockModeType.OPTIMISTIC_FORCE_INCREMENT);
         Beneficio to = em.find(Beneficio.class, toId, LockModeType.OPTIMISTIC_FORCE_INCREMENT);
 
-        if (from == null || to == null) {
-            throw new EntityNotFoundException("Benefício de origem ou destino não encontrado");
+        if (from == null) {
+            throw new BeneficioNotFoundException(fromId);
+        }
+        if (to == null) {
+            throw new BeneficioNotFoundException(toId);
         }
 
         if (!Boolean.TRUE.equals(from.getAtivo()) || !Boolean.TRUE.equals(to.getAtivo())) {
-            throw new IllegalStateException("Só é permitido transferir entre benefícios ativos");
+            throw new InactiveBeneficioException();
         }
 
         if (from.getValor().compareTo(amount) < 0) {
-            throw new IllegalArgumentException("Saldo insuficiente para transferência");
+            throw new InsufficientBalanceException();
         }
 
         from.setValor(from.getValor().subtract(amount));
@@ -43,15 +51,15 @@ public class BeneficioEjbService {
 
     private void validateTransferRequest(Long fromId, Long toId, BigDecimal amount) {
         if (fromId == null || toId == null) {
-            throw new IllegalArgumentException("Origem e destino são obrigatórios");
+            throw new InvalidTransferException("Origem e destino são obrigatórios");
         }
 
         if (fromId.equals(toId)) {
-            throw new IllegalArgumentException("Origem e destino devem ser diferentes");
+            throw new InvalidTransferException("Origem e destino devem ser diferentes");
         }
 
         if (amount == null || amount.compareTo(BigDecimal.ZERO) <= 0) {
-            throw new IllegalArgumentException("Valor de transferência deve ser maior que zero");
+            throw new InvalidTransferException("Valor de transferência deve ser maior que zero");
         }
     }
 }

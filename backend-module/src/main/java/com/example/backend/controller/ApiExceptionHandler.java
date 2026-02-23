@@ -1,6 +1,9 @@
 package com.example.backend.controller;
 
-import jakarta.persistence.EntityNotFoundException;
+import com.example.backend.exception.BeneficioNotFoundException;
+import com.example.backend.exception.InactiveBeneficioException;
+import com.example.backend.exception.InsufficientBalanceException;
+import com.example.backend.exception.InvalidTransferException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -13,21 +16,21 @@ import java.util.Map;
 @RestControllerAdvice
 public class ApiExceptionHandler {
 
-    @ExceptionHandler(EntityNotFoundException.class)
+    @ExceptionHandler(BeneficioNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public Map<String, String> handleNotFound(EntityNotFoundException ex) {
+    public Map<String, String> handleNotFound(BeneficioNotFoundException ex) {
         return Map.of("message", ex.getMessage());
     }
 
-    @ExceptionHandler(IllegalArgumentException.class)
+    @ExceptionHandler(InvalidTransferException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public Map<String, String> handleInvalidArgument(IllegalArgumentException ex) {
+    public Map<String, String> handleInvalidTransfer(InvalidTransferException ex) {
         return Map.of("message", ex.getMessage());
     }
 
-    @ExceptionHandler(IllegalStateException.class)
+    @ExceptionHandler({InactiveBeneficioException.class, InsufficientBalanceException.class})
     @ResponseStatus(HttpStatus.CONFLICT)
-    public Map<String, String> handleIllegalState(IllegalStateException ex) {
+    public Map<String, String> handleBusinessConflict(RuntimeException ex) {
         return Map.of("message", ex.getMessage());
     }
 
