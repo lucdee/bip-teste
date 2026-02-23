@@ -4,6 +4,6 @@
   "private": true,
   "description": "Painel web para CRUD de benefícios",
   "scripts": {
-    "start": "python3 -m http.server 4200"
+    "start": "node server.js"
   }
 }

@@ -11,6 +11,8 @@ npm run start
 
 A aplicação será servida em `http://localhost:4200` e consumirá o backend em `http://localhost:9090`.
 
+> O comando de start usa um servidor HTTP simples em Node.js (`node server.js`), então não depende de Python instalado na máquina.
+
 ## Funcionalidades
 
 - Listagem de benefícios
