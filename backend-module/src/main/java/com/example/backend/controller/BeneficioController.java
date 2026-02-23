@@ -3,6 +3,7 @@ package com.example.backend.controller;
 import com.example.backend.dto.BeneficioRequest;
 import com.example.backend.dto.BeneficioResponse;
 import com.example.backend.dto.TransferRequest;
+import com.example.backend.service.BeneficioEjbService;
 import com.example.backend.service.BeneficioService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -17,9 +18,11 @@ import java.util.List;
 public class BeneficioController {
 
     private final BeneficioService service;
+    private final BeneficioEjbService serviceTransfer;
 
-    public BeneficioController(BeneficioService service) {
+    public BeneficioController(BeneficioService service, BeneficioEjbService serviceTransfer) {
         this.service = service;
+        this.serviceTransfer = serviceTransfer;
     }
 
     @GetMapping
@@ -52,6 +55,6 @@ public class BeneficioController {
     @PostMapping("/transfer")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void transfer(@Valid @RequestBody TransferRequest request) {
-        service.transfer(request.fromId(), request.toId(), request.amount());
+        serviceTransfer.transfer(request.fromId(), request.toId(), request.amount());
     }
 }

@@ -54,10 +54,6 @@ public class BeneficioService {
         repository.deleteById(id);
     }
 
-    public void transfer(Long fromId, Long toId, BigDecimal amount) {
-        beneficioEjbService.transfer(fromId, toId, amount);
-    }
-
     private Beneficio getById(Long id) {
         return repository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Benefício não encontrado: " + id));
