@@ -17,10 +17,12 @@ public class BeneficioService {
 
     private final BeneficioRepository repository;
     private final BeneficioMapper mapper;
+    private final BeneficioEjbService beneficioEjbService;
 
-    public BeneficioService(BeneficioRepository repository, BeneficioMapper mapper) {
+    public BeneficioService(BeneficioRepository repository, BeneficioMapper mapper, BeneficioEjbService beneficioEjbService) {
         this.repository = repository;
         this.mapper = mapper;
+        this.beneficioEjbService = beneficioEjbService;
     }
 
     public List<BeneficioResponse> list() {
@@ -52,28 +54,8 @@ public class BeneficioService {
         repository.deleteById(id);
     }
 
-    @Transactional
     public void transfer(Long fromId, Long toId, BigDecimal amount) {
-        if (fromId.equals(toId)) {
-            throw new IllegalArgumentException("Origem e destino devem ser diferentes");
-        }
-
-        Beneficio from = getById(fromId);
-        Beneficio to = getById(toId);
-
-        if (!Boolean.TRUE.equals(from.getAtivo()) || !Boolean.TRUE.equals(to.getAtivo())) {
-            throw new IllegalStateException("Só é permitido transferir entre benefícios ativos");
-        }
-
-        if (from.getValor().compareTo(amount) < 0) {
-            throw new IllegalArgumentException("Saldo insuficiente para transferência");
-        }
-
-        from.setValor(from.getValor().subtract(amount));
-        to.setValor(to.getValor().add(amount));
-
-        repository.save(from);
-        repository.save(to);
+        beneficioEjbService.transfer(fromId, toId, amount);
     }
 
     private Beneficio getById(Long id) {
