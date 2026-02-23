@@ -25,6 +25,11 @@ public class BeneficioTransferEjbServiceImpl implements BeneficioTransferService
     public void transfer(Long fromId, Long toId, BigDecimal amount) {
         validateTransferRequest(fromId, toId, amount);
 
+        // SOLUÇÃO DO BUG
+        // O OPTIMISTIC_FORCE_INCREMENT força o incremento da versão da entidade.
+        // Assim, se duas transações tentarem alterar o mesmo registro ao mesmo tempo,
+        // o JPA detecta o conflito e lança erro, evitando inconsistência de dados.
+
         Beneficio from = em.find(Beneficio.class, fromId, LockModeType.OPTIMISTIC_FORCE_INCREMENT);
         Beneficio to = em.find(Beneficio.class, toId, LockModeType.OPTIMISTIC_FORCE_INCREMENT);
 
